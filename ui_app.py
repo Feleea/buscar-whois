@@ -64,30 +64,30 @@ def sisvisa():
     mainframe = ttk.Frame(janela, padding="0 0 0 0", style='FundoBranco.TFrame')
     mainframe.grid(column=0, row=0)
 
-    # guias = ttk.Notebook(mainframe, style='FundoBranco.TFrame', padding=(10, 0, 10, 0)) # Esquerda, Em cima, Direita, Em baixo
-    # guia_inicio = ttk.Frame(guias)
-    # guia_empresas = ttk.Frame(guias)
-    # guia_processos = ttk.Frame(guias)
-    # guia_corretor = ttk.Frame(guias)
-    # guia_atualizacoes = ttk.Frame(guias)
-    # guias.add(guia_inicio, text=" Início ")
-    # guias.add(guia_empresas, text=" Empresas ")
-    # guias.add(guia_processos, text=" Processos ")
-    # guias.add(guia_corretor, text=" Corretor ")
-    # guias.grid(column=0, row=1, pady=10, sticky=EW)
-
-
-    # div_3 = ttk.Frame(mainframe, style='FundoBranco.TFrame')
-    # div_3.grid(column=0, row=2)
-
-    # div_ambiente = ttk.Frame(div_3, style='FundoBranco.TFrame')
-    # div_ambiente.grid(column=0, row=0)
+    headFrame = ttk.Frame(mainframe, padding="10 10 10 10") # Esquerda, cima, direita, baixo
+    headFrame.grid(column=0, row=1)
+    buscarWhois = ttk.Entry(headFrame)
+    buscarWhois.grid(column=0, row=0, ipady=3)
+    buttonbuscarWhois = ttk.Button(headFrame, text="Buscar")
+    buttonbuscarWhois.grid(column=1, row=0, ipady=2)
+    
+    bodyFrame = ttk.Frame(mainframe, padding="14 1 14 10", relief=GROOVE)
+    bodyFrame.grid(column=0, row=2, pady=10)
+    card = ttk.Frame(bodyFrame)
+    card.grid(column=0, row=0)
+    cardTitle = ttk.Label(card, text="Fonte:")
+    cardTitle.grid(column=0, row=0)
+    card.grid(column=0, row=0)
+    cardBody = ttk.Frame(card)
+    cardBody.grid(column=0, row=1)
+    cardBodyContent = Listbox(cardBody)
+    cardBodyContent.grid(column=0, row=0)
     # ------------------------------------------------------------------------ FRAMES
 
     # ------------------------------------------------------------------------ LOGO + H1
     # div_h1 = ttk.Frame(mainframe, style='FundoAzul.TFrame')
     # div_h1.grid(column=0, row=0, columnspan=2, sticky=NSEW)
-    ttk.Label(mainframe, text="Escolha uma das funções abaixo:", font=tittle_Font,
+    ttk.Label(mainframe, text="Salve salve familia:", font=tittle_Font,
             padding=(0, 10), anchor='center', foreground=color_white,
             background=color_blue_label).grid(column=0, row=0, sticky=EW)
     # ------------------------------------------------------------------------ LOGO + H1

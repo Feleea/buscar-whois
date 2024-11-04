@@ -41,6 +41,8 @@ def sites_list():
 
     sites = ("https://bgpview.io/", "https://bgp.tools/", "https://www.peeringdb.com/net", "http://whois.ipip.net/")
 
+    return sites
+
 
 
 def criar_email_provisorio_moakt(nome=f"agente {random.randint(1,99999)}"):
