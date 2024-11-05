@@ -2,8 +2,8 @@ import context
 from tkinter import *
 from tkinter import ttk, font, messagebox, Listbox
 import program._geral as geral
-import threading
 import program.main_class as whois
+import threading
 
 
 def ui_whois():
@@ -29,18 +29,19 @@ def ui_whois():
 
     # ------------------------------------------------------------------------ STYLE LIST
     # ------------------------------------------------------------------------ VARIABLES LIST
+    target_var = StringVar()
     choice_service_var = IntVar()
     choice_step_var = IntVar()
     spin_var = IntVar(value=1)
-    ambiente_var = StringVar()
     config_corretor_var = BooleanVar()
     config_treinamento_var = BooleanVar()
     # ------------------------------------------------------------------------ VARIABLES LIST
     # ------------------------------------------------------------------------ FUNCTIONS LIST
     def buscar():
-        criar_cards()
-        program = whois.whois()
+
+        program = whois.whois(target_var.get())
         program.primeiro_site()
+        criar_cards()
 
 
     def criar_cards():
@@ -67,7 +68,7 @@ def ui_whois():
     headFrame.grid(column=0, row=1, pady=5)
     contornoHeadFrame = ttk.Frame(headFrame, padding="10 10 10 10", relief=GROOVE)
     contornoHeadFrame.grid(column=0, row=0)
-    buscarWhois = ttk.Entry(contornoHeadFrame)
+    buscarWhois = ttk.Entry(contornoHeadFrame, textvariable=target_var)
     buscarWhois.grid(column=0, row=0, ipady=3)
     buttonbuscarWhois = ttk.Button(contornoHeadFrame, text="Buscar", command=buscar)
     buttonbuscarWhois.grid(column=1, row=0, ipady=2)
