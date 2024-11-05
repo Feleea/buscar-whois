@@ -1,31 +1,31 @@
+import context
 from tkinter import *
 from tkinter import ttk, font, messagebox, Listbox
+import program._geral as geral
 import threading
-import os
+import program.main_class as whois
 
 
-def sisvisa():
+def ui_whois():
     # ------------------------------------------------------------------------ CONFIG UI
     janela = Tk()
     janela.title("Buscar Whois")
     # janela.geometry("350x210")  # Largura x Altura
     # janela.iconphoto(False, PhotoImage(file=procurar_arquivos('SISVISA3.PNG')))
     janela.resizable(width=False, height=False)
-    # janela.rowconfigure(0, weight=1)  # PESO DA LINHA (EXPANSÃO)
-    # janela.columnconfigure(0)  # PESO DA COLUNA (EXPANSÃO)
     # ------------------------------------------------------------------------ CONFIG UI
     # ------------------------------------------------------------------------ COLOR LIST
     color_white = "#ffffff"
-    color_blue_label = "#1f73b7"
+    color_blue_label = "#014654"
     # ------------------------------------------------------------------------ COLOR LIST
     # ------------------------------------------------------------------------ STYLE LIST
     tittle_Font = font.Font(name='sisvisatitle_Font', size=16, weight='bold')
     sub_tittle_Font = font.Font(name='subapptittle_Font', size=10, weight='bold')
     ttk.Style().configure('FundoBranco.TFrame', background=color_white)
-    ttk.Style().configure('FundoBranco.TRadiobutton', background=color_white)
-    ttk.Style().configure('FundoBranco.TCheckbutton', background=color_white)
     ttk.Style().configure('FundoAzul.TFrame', background='blue')
-    ttk.Style().configure('FundoBranco.TSeparator', foregroud=color_white)
+    ttk.Style().configure('FundoLAzul.TLabel', background='#017991')
+    ttk.Style().configure('Fundo.TFrame', background='blue')
+    ttk.Style().configure('FundoBranco.TSeparator', background=color_white)
 
     # ------------------------------------------------------------------------ STYLE LIST
     # ------------------------------------------------------------------------ VARIABLES LIST
@@ -37,56 +37,48 @@ def sisvisa():
     config_treinamento_var = BooleanVar()
     # ------------------------------------------------------------------------ VARIABLES LIST
     # ------------------------------------------------------------------------ FUNCTIONS LIST
-    def confirm_choice():
-        choice = choice_service_var.get()
-        ambiente = ambiente_var.get()
-        spin = spin_var.get()
-        corretor = config_corretor_var.get()
+    def buscar():
+        criar_cards()
+        program = whois.whois()
+        program.primeiro_site()
 
-        try:
-            step = choice_step_var.get()
-            if choice < 6: 
-                step = ''.join([f"1.{choice}.{step}"])
-            else:
-                step = ''.join([f"2.{choice}.{step}"])
-        except:
-            step = None
+
+    def criar_cards():
+        sites = geral.sites_list()
+
+        for index, site in enumerate(sites):
+            card = ttk.Frame(bodyFrame, padding="2 2", relief=GROOVE)
+            card.grid(column=index, row=0, padx=10, pady=10)
+            cardTitle = ttk.Label(card, style='FundoLAzul.TLabel', text=f"Fonte: {site}", anchor=CENTER)
+            cardTitle.grid(column=0, row=0, sticky=NSEW)
+            cardBody = ttk.Frame(card, padding="5 0 5 5")
+            cardBody.grid(column=0, row=1)
+            cardBodyContent = Listbox(cardBody, width=35)
+            cardBodyContent.grid(column=0, row=0)
+
         
-        # print("Escolha id:", choice, "\nStep id:", step, f"\nConfigs:\nCorretor={corretor}")
-        if validation(choice=choice, step=step, ambiente=ambiente): return 
-
-        return main_sisvisa.menu(ambiente=ambiente, choice=choice, step=step, switch_corretor=corretor)
-
-
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
     # ------------------------------------------------------------------------ FRAMES
-    mainframe = ttk.Frame(janela, padding="0 0 0 0", style='FundoBranco.TFrame')
+    mainframe = ttk.Frame(janela, padding="5 5", style='FundoBranco.TFrame')
     mainframe.grid(column=0, row=0)
 
-    headFrame = ttk.Frame(mainframe, padding="10 10 10 10") # Esquerda, cima, direita, baixo
-    headFrame.grid(column=0, row=1)
-    buscarWhois = ttk.Entry(headFrame)
+    headFrame = ttk.Frame(mainframe, padding="0 5 0 0", style='FundoBranco.TFrame') # Esquerda, cima, direita, baixo
+    headFrame.grid(column=0, row=1, pady=5)
+    contornoHeadFrame = ttk.Frame(headFrame, padding="10 10 10 10", relief=GROOVE)
+    contornoHeadFrame.grid(column=0, row=0)
+    buscarWhois = ttk.Entry(contornoHeadFrame)
     buscarWhois.grid(column=0, row=0, ipady=3)
-    buttonbuscarWhois = ttk.Button(headFrame, text="Buscar")
+    buttonbuscarWhois = ttk.Button(contornoHeadFrame, text="Buscar", command=buscar)
     buttonbuscarWhois.grid(column=1, row=0, ipady=2)
     
-    bodyFrame = ttk.Frame(mainframe, padding="14 1 14 10", relief=GROOVE)
-    bodyFrame.grid(column=0, row=2, pady=10)
-    card = ttk.Frame(bodyFrame)
-    card.grid(column=0, row=0)
-    cardTitle = ttk.Label(card, text="Fonte:")
-    cardTitle.grid(column=0, row=0)
-    card.grid(column=0, row=0)
-    cardBody = ttk.Frame(card)
-    cardBody.grid(column=0, row=1)
-    cardBodyContent = Listbox(cardBody)
-    cardBodyContent.grid(column=0, row=0)
+    bodyFrame = ttk.Frame(mainframe, style='FundoBranco.TFrame')
+    bodyFrame.grid(column=0, row=2)
+    
+
     # ------------------------------------------------------------------------ FRAMES
 
     # ------------------------------------------------------------------------ LOGO + H1
-    # div_h1 = ttk.Frame(mainframe, style='FundoAzul.TFrame')
-    # div_h1.grid(column=0, row=0, columnspan=2, sticky=NSEW)
     ttk.Label(mainframe, text="Salve salve familia:", font=tittle_Font,
             padding=(0, 10), anchor='center', foreground=color_white,
             background=color_blue_label).grid(column=0, row=0, sticky=EW)
@@ -111,4 +103,4 @@ def sisvisa():
     # ------------------------------------------------------------------------ RUN WINDOWS
 
 if __name__ == '__main__':
-    sisvisa()
+    ui_whois()

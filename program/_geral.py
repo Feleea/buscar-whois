@@ -11,7 +11,6 @@ from winotify import Notification, audio
 import random
 import os
 from time import sleep
-from datetime import datetime
 import functools
 
 
