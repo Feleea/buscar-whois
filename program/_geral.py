@@ -30,7 +30,8 @@ def abrir_navegador(is_navegador: bool) -> webdriver.Chrome:
 
 
 def fechar_navegador(navegador: webdriver.Chrome):
-    navegador.quit()
+    try: navegador.quit()
+    except: pass
 
 
 def sites_list():
@@ -38,7 +39,7 @@ def sites_list():
         177.67.X.X/22 53013
         2804:020:X:X/128 53013"""
 
-    sites = ("https://bgpview.io/", "https://bgp.tools/", "https://www.peeringdb.com/net", "http://whois.ipip.net/")
+    sites = ("https://bgpview.io/", "Comming soon") # , "https://bgp.tools/", "https://www.peeringdb.com/"
 
     return sites
 

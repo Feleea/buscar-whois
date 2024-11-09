@@ -1,6 +1,7 @@
 import context
 from tkinter import *
 from tkinter import ttk, font, messagebox, Listbox
+from PIL import Image, ImageTk
 import program._geral as geral
 import program.main_class as whois
 import threading
@@ -11,7 +12,7 @@ def ui_whois():
     janela = Tk()
     janela.title("Buscar Whois")
     # janela.geometry("350x210")  # Largura x Altura
-    # janela.iconphoto(False, PhotoImage(file=procurar_arquivos('SISVISA3.PNG')))
+    janela.iconphoto(False, PhotoImage(file="program/dance.gif"))
     janela.resizable(width=False, height=False)
     # ------------------------------------------------------------------------ CONFIG UI
     # ------------------------------------------------------------------------ COLOR LIST
@@ -20,7 +21,6 @@ def ui_whois():
     # ------------------------------------------------------------------------ COLOR LIST
     # ------------------------------------------------------------------------ STYLE LIST
     tittle_Font = font.Font(name='sisvisatitle_Font', size=16, weight='bold')
-    sub_tittle_Font = font.Font(name='subapptittle_Font', size=10, weight='bold')
     ttk.Style().configure('FundoBranco.TFrame', background=color_white)
     ttk.Style().configure('FundoAzul.TFrame', background='blue')
     ttk.Style().configure('FundoLAzul.TLabel', background='#017991')
@@ -29,34 +29,60 @@ def ui_whois():
 
     # ------------------------------------------------------------------------ STYLE LIST
     # ------------------------------------------------------------------------ VARIABLES LIST
-    target_var = StringVar()
-    choice_service_var = IntVar()
-    choice_step_var = IntVar()
-    spin_var = IntVar(value=1)
-    config_corretor_var = BooleanVar()
-    config_treinamento_var = BooleanVar()
+    asNumberVar = StringVar()
     # ------------------------------------------------------------------------ VARIABLES LIST
     # ------------------------------------------------------------------------ FUNCTIONS LIST
     def buscar():
 
-        program = whois.whois(target_var.get())
-        program.primeiro_site()
+        if validation(): return
+
         criar_cards()
 
 
     def criar_cards():
         sites = geral.sites_list()
+        program = whois.whois(asNumberVar.get())
 
+        # Criar cards
         for index, site in enumerate(sites):
             card = ttk.Frame(bodyFrame, padding="2 2", relief=GROOVE)
-            card.grid(column=index, row=0, padx=10, pady=10)
+            card.grid(column=0, row=index, padx=10, pady=10)
             cardTitle = ttk.Label(card, style='FundoLAzul.TLabel', text=f"Fonte: {site}", anchor=CENTER)
             cardTitle.grid(column=0, row=0, sticky=NSEW)
             cardBody = ttk.Frame(card, padding="5 0 5 5")
             cardBody.grid(column=0, row=1)
-            cardBodyContent = Listbox(cardBody, width=35)
+            cardBodyContent = Listbox(cardBody, width=70, activestyle='none')
             cardBodyContent.grid(column=0, row=0)
 
+            # Colher informações e preencher os cards
+            match index:
+                case 0:
+                    info = program.bgpview()
+                    cardBodyContent.insert(END, info[0] + " - " + info[1])
+                    for i in info[2]: cardBodyContent.insert(END, i + f" {info[0][2:]}") 
+
+                case 1:
+                    pass
+                case 2:
+                    pass
+                case 3:
+                    pass
+                case 4:
+                    pass
+                    
+
+    def validation():
+        tittle_text = "Não foi possível continuar"
+
+        if asNumberVar.get() == "" or asNumberVar.get() == " ": 
+            messagebox.showinfo(message="Preencha uma informação válida para buscar", title=tittle_text)
+            return True
+        
+        if "AS" not in asNumberVar.get():
+            messagebox.showinfo(message='Realize a busca do troço com o "AS" na frente', title=tittle_text)
+            return True
+        
+        return False
         
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
@@ -68,7 +94,7 @@ def ui_whois():
     headFrame.grid(column=0, row=1, pady=5)
     contornoHeadFrame = ttk.Frame(headFrame, padding="10 10 10 10", relief=GROOVE)
     contornoHeadFrame.grid(column=0, row=0)
-    buscarWhois = ttk.Entry(contornoHeadFrame, textvariable=target_var)
+    buscarWhois = ttk.Entry(contornoHeadFrame, textvariable=asNumberVar)
     buscarWhois.grid(column=0, row=0, ipady=3)
     buttonbuscarWhois = ttk.Button(contornoHeadFrame, text="Buscar", command=buscar)
     buttonbuscarWhois.grid(column=1, row=0, ipady=2)
