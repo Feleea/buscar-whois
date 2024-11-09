@@ -82,7 +82,11 @@ def ui_whois():
             return True
         
         return False
-        
+    
+    def limpar_entry_email(event):
+        buscarWhois.delete(0, END)
+        buscarWhois.configure(foreground="black")
+
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
     # ------------------------------------------------------------------------ FRAMES
@@ -93,8 +97,9 @@ def ui_whois():
     headFrame.grid(column=0, row=1, pady=5)
     contornoHeadFrame = ttk.Frame(headFrame, padding="10 10 10 10", relief=GROOVE)
     contornoHeadFrame.grid(column=0, row=0)
-    buscarWhois = ttk.Entry(contornoHeadFrame, textvariable=asNumberVar)
+    buscarWhois = ttk.Entry(contornoHeadFrame, textvariable=asNumberVar, foreground="gray")
     buscarWhois.grid(column=0, row=0, ipady=3)
+    buscarWhois.insert(0, "AS53182")
     buttonbuscarWhois = ttk.Button(contornoHeadFrame, text="Buscar", command=buscar)
     buttonbuscarWhois.grid(column=1, row=0, ipady=2)
     
@@ -121,7 +126,7 @@ def ui_whois():
     # ------------------------------------------------------------------------ FOOT
 
     # ------------------------------------------------------------------------ EVENTS
-
+    buscarWhois.bind('<Button-1>', limpar_entry_email) # Limpar Entry de usuário e senha
     # ------------------------------------------------------------------------ EVENTS
 
     # ------------------------------------------------------------------------ RUN WINDOWS
