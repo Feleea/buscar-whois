@@ -1,10 +1,9 @@
 import context
 from tkinter import *
 from tkinter import ttk, font, messagebox, Listbox
-from PIL import Image, ImageTk
 import program._geral as geral
 import program.main_class as whois
-import threading
+import os
 
 
 def ui_whois():
@@ -12,7 +11,7 @@ def ui_whois():
     janela = Tk()
     janela.title("Buscar Whois")
     # janela.geometry("350x210")  # Largura x Altura
-    janela.iconphoto(False, PhotoImage(file="program/dance.gif"))
+    janela.iconphoto(False, PhotoImage(file=geral.procurar_arquivos("dance.gif")))
     janela.resizable(width=False, height=False)
     # ------------------------------------------------------------------------ CONFIG UI
     # ------------------------------------------------------------------------ COLOR LIST

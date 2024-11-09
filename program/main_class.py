@@ -41,7 +41,7 @@ class whois():
             _acessar_site()
             _pegar_whois()
             
-            fechar_navegador()
+            fechar_navegador(navegador)
 
             return self.asNumber2, self.asName, self.whois
 
@@ -51,4 +51,3 @@ class whois():
     
     def coming_soon(self):
         pass
-    

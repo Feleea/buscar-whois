@@ -135,7 +135,6 @@ def log_terminal_automacao(mensagem: str):
 def procurar_arquivos(nome_arquivo) -> str:
     caminho_atual = os.path.realpath(__file__)
     diretorio_raiz = os.path.dirname(os.path.dirname(caminho_atual))
-    # diretorio_raiz = os.path.realpath(__file__)
     
     # Caminha recursivamente pelo diretório raiz e subdiretórios
     for dirpath, dirnames, filenames in os.walk(diretorio_raiz):
