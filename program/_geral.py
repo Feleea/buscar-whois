@@ -10,8 +10,9 @@ from selenium.common.exceptions import *
 from winotify import Notification, audio
 import random
 import os
-from time import sleep
+import time
 import functools
+from datetime import datetime
 
 
 
@@ -73,7 +74,7 @@ def stop(navegador: webdriver.Chrome, skip_stop: bool):
 
     win_notification("Automação concluida. A tela ficará aberta por 10 minutos antes de fechar sozinha.")
     print("######################## Em pausa ########################")
-    sleep(600)
+    time.sleep(600)
     fechar_navegador(navegador)
 
 
@@ -113,7 +114,7 @@ def log_terminal_automacao(mensagem: str):
                     else:
                         try: 
                             navegador.execute_script("alert('Deu erro aqui viu');")
-                            sleep(300)
+                            time.sleep(300)
                             navegador.quit()
                             print("Finalizando o programa...", end="\r")
 

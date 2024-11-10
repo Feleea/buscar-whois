@@ -39,15 +39,14 @@ def ui_whois():
         if validation(): return
 
         criar_cards()
+        apagarCardsLigado()
 
 
     def criar_cards():
         sites = geral.sites_list()
         columCont = columVar.get()
-        if salvarBuscasVar.get() == 1: columVar.set(columCont+1)
-        if salvarBuscasVar.get() == 0: 
-            for i in cardList: i.destroy()
-            cardList.clear()
+        if salvarBuscasVar.get() == 1: columVar.set(columVar.get()+1)
+        apagarCardsDesligado()
 
         program = whois.whois(asNumberVar.get())
 
@@ -55,7 +54,7 @@ def ui_whois():
         for index, site in enumerate(sites):
             card = ttk.Frame(bodyFrame, padding="2 2", relief=GROOVE)
             card.grid(column=columCont, row=index, padx=10, pady=10)
-            cardTitle = ttk.Label(card, style='FundoLAzul.TLabel', text=f"Fonte: {site}", anchor=CENTER)
+            cardTitle = ttk.Label(card, style='FundoLAzul.TLabel', text=f"Busca realizada às {geral.datetime.today().strftime("%H:%M:%S")} - Fonte: {site}", anchor=CENTER)
             cardTitle.grid(column=0, row=0, sticky=NSEW)
             cardBody = ttk.Frame(card, padding="5 0 5 5")
             cardBody.grid(column=0, row=1)
@@ -79,8 +78,10 @@ def ui_whois():
                 case 4:
                     pass
 
-        
-                    
+            print(len(cardList))
+            print(cardList)
+
+
 
     def validation():
         tittle_text = "Não foi possível continuar"
@@ -102,6 +103,18 @@ def ui_whois():
     def ligarSalvarBuscas():
         if salvarBuscasVar.get() == 1: columVar.set(columVar.get()+1)
         if salvarBuscasVar.get() == 0 and columVar.get() > 0: columVar.set(columVar.get()-1)
+
+    def apagarCardsDesligado():
+        if salvarBuscasVar.get() == 0:
+            for i in cardList:
+                i.destroy()
+            cardList.clear()
+               
+    def apagarCardsLigado():
+        while len(cardList) > 6:
+            card = cardList[0]
+            card.destroy()
+            cardList.remove(card)
 
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
