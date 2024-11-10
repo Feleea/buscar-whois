@@ -58,7 +58,7 @@ def ui_whois():
             cardTitle.grid(column=0, row=0, sticky=NSEW)
             cardBody = ttk.Frame(card, padding="5 0 5 5")
             cardBody.grid(column=0, row=1)
-            cardBodyContent = Listbox(cardBody, width=55, activestyle='none')
+            cardBodyContent = Text(cardBody, width=50, height=10)
             cardBodyContent.grid(column=0, row=0)
             cardList.append(card)
 
@@ -66,9 +66,9 @@ def ui_whois():
             match index:
                 case 0:
                     info = program.bgpview()
-                    cardBodyContent.insert(END, info[0] + " - " + info[1])
-                    for i in info[2]: cardBodyContent.insert(END, i + f" {info[0][2:]}") 
-
+                    cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
+                    for i in info[2]:
+                        cardBodyContent.insert(END, i + f" {info[0][2:]}\n") 
                 case 1:
                     pass
                 case 2:
