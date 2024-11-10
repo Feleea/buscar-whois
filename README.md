@@ -15,3 +15,6 @@
  ```bash
  pip install -r requirements.txt
  ```
+```bash
+ pyinstaller --add-data "program:program" --icon=danceico.ico ui_app.py
+ ```
