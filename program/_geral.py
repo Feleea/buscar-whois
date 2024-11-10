@@ -40,7 +40,7 @@ def sites_list():
         177.67.X.X/22 53013
         2804:020:X:X/128 53013"""
 
-    sites = ("https://bgpview.io/", "Comming soon") # , "https://bgp.tools/", "https://www.peeringdb.com/"
+    sites = ("https://bgpview.io/", "https://bgp.he.net/") # , "https://bgp.tools/", "https://www.peeringdb.com/"
 
     return sites
 

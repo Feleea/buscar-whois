@@ -68,9 +68,20 @@ def ui_whois():
                     info = program.bgpview()
                     cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
                     for i in info[2]:
-                        cardBodyContent.insert(END, i + f" {info[0][2:]}\n") 
+                        cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
+                        program.asNumber2 = ""
+                        program.asName = ""
+                        program.whois = []
+                
                 case 1:
-                    pass
+                    info = program.bgp()
+                    cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
+                    for i in info[2]: 
+                        cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
+                        program.asNumber2 = ""
+                        program.asName = ""
+                        program.whois = []
+
                 case 2:
                     pass
                 case 3:
@@ -78,9 +89,7 @@ def ui_whois():
                 case 4:
                     pass
 
-            print(len(cardList))
-            print(cardList)
-
+        geral.fechar_navegador(program.navegador)
 
 
     def validation():
