@@ -7,7 +7,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import *
-from winotify import Notification, audio
 import random
 import os
 import time
@@ -55,28 +54,6 @@ def criar_email_provisorio_moakt(nome=f"agente {random.randint(1,99999)}"):
     email = navegador_email.find_element(By.ID, "email-address").text
     print(f"E-mail {email} provisório criado.")
     return email, navegador_email
-
-
-def win_notification(msg: str):
-    notificacao = Notification(app_id="Cadastro Automatico",
-                                title="Notificação da Automação",
-                                msg=msg)
-    # notificacao.add_actions(label="Abrir navegador", launch=navegador.maximize_window())
-    notificacao.set_audio(audio.Reminder, loop=False)
-    notificacao.show()
-
-
-def stop(navegador: webdriver.Chrome, skip_stop: bool):
-    '''skip_stop = True -> Pula em caso de coicidência\n
-       skip_stop = False -> Pausa por 600 segundos'''
-
-    if skip_stop: return
-
-    win_notification("Automação concluida. A tela ficará aberta por 10 minutos antes de fechar sozinha.")
-    print("######################## Em pausa ########################")
-    time.sleep(600)
-    fechar_navegador(navegador)
-
 
 
 # Decorador de log no terminal e erros
