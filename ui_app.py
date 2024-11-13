@@ -28,78 +28,77 @@ def ui_whois():
 
     # ------------------------------------------------------------------------ STYLE LIST
     # ------------------------------------------------------------------------ VARIABLES LIST
-    asNumberVar = StringVar()
+    asBuscado = StringVar(value="AS53182")
     columVar = IntVar(value=0)
-    salvarBuscasVar = IntVar(value=0)
     cardList = []
+    sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
     # ------------------------------------------------------------------------ VARIABLES LIST
     # ------------------------------------------------------------------------ FUNCTIONS LIST
     def buscar():
 
         if validation(): return
-
         criar_cards()
-        apagarCardsLigado()
 
 
     def criar_cards():
-        sites = geral.sites_list()
-        columCont = columVar.get()
-        if salvarBuscasVar.get() == 1: columVar.set(columVar.get()+1)
-        apagarCardsDesligado()
 
-        program = whois.whois(asNumberVar.get())
+        asNumberString = asBuscado.get()
 
-        # Criar cards
-        for index, site in enumerate(sites):
+        def _criar_cards(asNumber: str, index=0):
+
+            program.asNumber = asNumber.strip()
+
+            if len(cardList) // 3 == 1: 
+                columCont = columVar.set(columVar.get()+1)
+                index -= 3
+            if len(cardList) // 3 == 2: 
+                columCont = columVar.set(columVar.get()+2)
+                index -= 3
+            else: columCont = columVar.get()
+
             card = ttk.Frame(bodyFrame, padding="2 2", relief=GROOVE)
             card.grid(column=columCont, row=index, padx=10, pady=10)
-            cardTitle = ttk.Label(card, style='FundoLAzul.TLabel', text=f"Busca realizada às {geral.datetime.today().strftime("%H:%M:%S")} - Fonte: {site}", anchor=CENTER)
+            cardTitle = ttk.Label(
+                card, style='FundoLAzul.TLabel',
+                text=f"Busca realizada às {geral.datetime.today().strftime("%H:%M:%S")} - Fonte: {sitedeBuscaVar.get()}", anchor=CENTER)
             cardTitle.grid(column=0, row=0, sticky=NSEW)
             cardBody = ttk.Frame(card, padding="5 0 5 5")
             cardBody.grid(column=0, row=1)
-            cardBodyContent = Text(cardBody, width=50, height=10)
+            cardBodyContent = Text(cardBody, width=45, height=9)
             cardBodyContent.grid(column=0, row=0)
             cardList.append(card)
 
-            # Colher informações e preencher os cards
-            match index:
-                case 0:
-                    info = program.bgpview()
-                    cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
-                    for i in info[2]:
-                        cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
-                        program.asNumber2 = ""
-                        program.asName = ""
-                        program.whois = []
-                
-                case 1:
-                    info = program.bgp()
-                    cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
-                    for i in info[2]: 
-                        cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
-                        program.asNumber2 = ""
-                        program.asName = ""
-                        program.whois = []
+            if geral.sites_list()[0] in sitedeBuscaVar.get(): info = program.bgpview()
+            if geral.sites_list()[1] in sitedeBuscaVar.get(): info = program.bgp()
 
-                case 2:
-                    pass
-                case 3:
-                    pass
-                case 4:
-                    pass
+            cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
+            for i in info[2]:
+                cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
+                program.asNumber2 = ""
+                program.asName = ""
+                program.whois = []
+
+
+        program = whois.whois()
+        apagarCards()
+        if "," in asNumberString:
+            asNumberList = asNumberString.split(",")
+            for index, asNumber in enumerate(asNumberList): _criar_cards(asNumber, index)
+        else:
+            _criar_cards(asNumber=asNumberString)
 
         geral.fechar_navegador(program.navegador)
+
 
 
     def validation():
         tittle_text = "Não foi possível continuar"
 
-        if asNumberVar.get() == "" or asNumberVar.get() == " ": 
+        if asBuscado.get() == "" or asBuscado.get() == " ": 
             messagebox.showinfo(message="Preencha uma informação válida para buscar", title=tittle_text)
             return True
         
-        if "AS" not in asNumberVar.get():
+        if "AS" not in asBuscado.get():
             messagebox.showinfo(message='Realize a busca do troço com o "AS" na frente', title=tittle_text)
             return True
         
@@ -109,21 +108,10 @@ def ui_whois():
         buscarWhois.delete(0, END)
         buscarWhois.configure(foreground="black")
 
-    def ligarSalvarBuscas():
-        if salvarBuscasVar.get() == 1: columVar.set(columVar.get()+1)
-        if salvarBuscasVar.get() == 0 and columVar.get() > 0: columVar.set(columVar.get()-1)
-
-    def apagarCardsDesligado():
-        if salvarBuscasVar.get() == 0:
-            for i in cardList:
-                i.destroy()
+    def apagarCards():
+            for i in cardList: i.destroy()
             cardList.clear()
-               
-    def apagarCardsLigado():
-        while len(cardList) > 6:
-            card = cardList[0]
-            card.destroy()
-            cardList.remove(card)
+
 
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
@@ -136,20 +124,24 @@ def ui_whois():
 
     contornoHeadFrame = ttk.Frame(headFrame, padding="10 10 10 10", relief=GROOVE)
     contornoHeadFrame.grid(column=0, row=0)
-    buscarWhois = ttk.Entry(contornoHeadFrame, textvariable=asNumberVar, foreground="gray")
+    buscarWhois = ttk.Entry(contornoHeadFrame, textvariable=asBuscado, foreground="gray", width=25)
     buscarWhois.grid(column=0, row=0, ipady=3)
-    buscarWhois.insert(0, "AS53182")
     buttonbuscarWhois = ttk.Button(
         contornoHeadFrame, text="Buscar", command=lambda: Thread(target=buscar).start())
     buttonbuscarWhois.grid(column=1, row=0, ipady=2)
     
-    separinho1 = ttk.Separator(contornoHeadFrame, orient="vertical")
-    separinho1.grid(column=2, row=0, sticky=NS, padx=10)
+    separinhoBusca = ttk.Separator(contornoHeadFrame, orient="vertical")
+    separinhoBusca.grid(column=2, row=0, sticky=NS, padx=10)
 
     configFrame = ttk.Frame(contornoHeadFrame)
     configFrame.grid(column=3, row=0)
-    ativarHistorico = ttk.Checkbutton(configFrame, text="Salvar buscas anteriores", variable=salvarBuscasVar, command=ligarSalvarBuscas)
-    ativarHistorico.grid(column=0, row=0)
+    configFrameTitle = ttk.Label(configFrame, text="Configurações", style='FundoLAzul.TLabel', anchor=CENTER)
+    configFrameTitle.grid(column=0, row=0, columnspan=3, sticky=EW)
+
+    configSubTitleUm = ttk.Label(configFrame, text="Realizar a busca em:")
+    configSubTitleUm.grid(column=0, row=1)
+    buscarEntry = ttk.Combobox(configFrame, values=geral.sites_list(), textvariable=sitedeBuscaVar)
+    buscarEntry.grid(column=0, row=2)
 
     bodyFrame = ttk.Frame(mainframe, style='FundoBranco.TFrame')
     bodyFrame.grid(column=0, row=2)

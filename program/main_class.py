@@ -3,7 +3,7 @@ from _geral import *
 
 
 class whois():
-    def __init__(self, asNumber) -> None:
+    def __init__(self, asNumber="") -> None:
         
         self.navegador = abrir_navegador(is_navegador=True)
         self.asNumber = asNumber
@@ -18,10 +18,13 @@ class whois():
         def _acessar_site():
             navegador.get("https://bgpview.io/")
             navegador.find_element(By.NAME, "query_term").send_keys(self.asNumber)
+            try: navegador.find_element(By.ID, "hs-eu-confirmation-button").click()
+            except: pass
             navegador.find_element(By.CLASS_NAME, "btn.btn-default").click()
             WebDriverWait(navegador, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "resource-content")))
 
         def _pegar_whois():
+
             navegador.find_element(By.ID, "nav-whois").click()
             texto = navegador.find_element(By.ID, "content-whois").text
             lista_itens = [item.split(": ") for item in texto.split("\n")]
