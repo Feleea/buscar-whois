@@ -32,8 +32,8 @@ def ui_whois():
             corFonteSubTitulo = "#000000"
 
         else:
-            corFundoPadrao = "#111"
-            corFundoTitulo = "#2e2e2e"
+            corFundoPadrao = "#2e2e2e"
+            corFundoTitulo = "#111"
             corFonteTitulo = "#ffffff"
             corFundoSubTitulo = "#bbc7c9"
             corFonteSubTitulo = "#ffffff"
