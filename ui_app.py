@@ -1,6 +1,6 @@
 import context
 from tkinter import *
-from tkinter import ttk, font, messagebox, Listbox
+from tkinter import ttk, font, messagebox
 import program._geral as geral
 import program.main_class as whois
 from threading import Thread
@@ -14,31 +14,47 @@ def ui_whois():
     janela.iconphoto(False, PhotoImage(file=geral.procurar_arquivos("dance.gif")))
     janela.resizable(width=False, height=False)
     # ------------------------------------------------------------------------ CONFIG UI
-    # ------------------------------------------------------------------------ COLOR LIST
-    color_white = "#ffffff"
-    color_blue_label = "#014654"
-    # ------------------------------------------------------------------------ COLOR LIST
-    # ------------------------------------------------------------------------ STYLE LIST
-    tittle_Font = font.Font(name='sisvisatitle_Font', size=16, weight='bold')
-    ttk.Style().configure('FundoBranco.TFrame', background=color_white)
-    ttk.Style().configure('FundoAzul.TFrame', background='blue')
-    ttk.Style().configure('FundoLAzul.TLabel', background='#017991')
-    ttk.Style().configure('Fundo.TFrame', background='blue')
-    ttk.Style().configure('FundoBranco.TSeparator', background=color_white)
-
-    # ------------------------------------------------------------------------ STYLE LIST
     # ------------------------------------------------------------------------ VARIABLES LIST
     asBuscado = StringVar(value="AS53182")
     columVar = IntVar(value=0)
     cardList = []
     sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
+    temaVar = StringVar()
     # ------------------------------------------------------------------------ VARIABLES LIST
+    # ------------------------------------------------------------------------ COLOR LIST
+    def temas(event):
+        
+        if "Claro" in event:
+            corFundoPadrao = "#ffffff"
+            corFundoTitulo = "#014654"
+            corFonteTitulo = "#ffffff"
+            corFundoSubTitulo = "#017991"
+            corFonteSubTitulo = "#000000"
+
+        else:
+            corFundoPadrao = "#111"
+            corFundoTitulo = "#2e2e2e"
+            corFonteTitulo = "#ffffff"
+            corFundoSubTitulo = "#bbc7c9"
+            corFonteSubTitulo = "#ffffff"
+        
+        # ------------------------------------------------------------------------ STYLE LIST
+        ttk.Style().configure('FundoTelaPrincipal.TFrame', background=corFundoPadrao)
+        ttk.Style().configure('Titulo.TLabel', background=corFundoTitulo, foreground=corFonteTitulo)
+        ttk.Style().configure('FundoCardTitulo.TLabel', background=corFundoSubTitulo)
+        ttk.Style().configure('FundoBranco.TSeparator', background=corFundoPadrao)
+
+        # return dalee
+        # ------------------------------------------------------------------------ STYLE LIST
+    # ------------------------------------------------------------------------ COLOR LIST
+
+    #dalee = temas("Claro")
+    temas("Claro")
     # ------------------------------------------------------------------------ FUNCTIONS LIST
     def buscar():
 
         if validation(): return
         criar_cards()
-
 
     def criar_cards():
 
@@ -59,7 +75,7 @@ def ui_whois():
             card = ttk.Frame(bodyFrame, padding="2 2", relief=GROOVE)
             card.grid(column=columCont, row=index, padx=10, pady=10)
             cardTitle = ttk.Label(
-                card, style='FundoLAzul.TLabel',
+                card, style='FundoCardTitulo.TLabel',
                 text=f"Busca realizada às {geral.datetime.today().strftime("%H:%M:%S")} - Fonte: {sitedeBuscaVar.get()}", anchor=CENTER)
             cardTitle.grid(column=0, row=0, sticky=NSEW)
             cardBody = ttk.Frame(card, padding="5 0 5 5")
@@ -90,7 +106,6 @@ def ui_whois():
         geral.fechar_navegador(program.navegador)
 
 
-
     def validation():
         tittle_text = "Não foi possível continuar"
 
@@ -116,10 +131,10 @@ def ui_whois():
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
     # ------------------------------------------------------------------------ FRAMES
-    mainframe = ttk.Frame(janela, padding="5 5", style='FundoBranco.TFrame')
+    mainframe = ttk.Frame(janela, padding="5 5", style='FundoTelaPrincipal.TFrame')
     mainframe.grid(column=0, row=0)
 
-    headFrame = ttk.Frame(mainframe, padding="0 5 0 0", style='FundoBranco.TFrame') # Esquerda, cima, direita, baixo
+    headFrame = ttk.Frame(mainframe, padding="0 5 0 0", style='FundoTelaPrincipal.TFrame') # Esquerda, cima, direita, baixo
     headFrame.grid(column=0, row=1, pady=5)
 
     contornoHeadFrame = ttk.Frame(headFrame, padding="10 10 10 10", relief=GROOVE)
@@ -135,24 +150,33 @@ def ui_whois():
 
     configFrame = ttk.Frame(contornoHeadFrame)
     configFrame.grid(column=3, row=0)
-    configFrameTitle = ttk.Label(configFrame, text="Configurações", style='FundoLAzul.TLabel', anchor=CENTER)
-    configFrameTitle.grid(column=0, row=0, columnspan=3, sticky=EW)
+    configFrameTitle = ttk.Label(configFrame, text="Configurações", style='FundoCardTitulo.TLabel', anchor=CENTER)
+    configFrameTitle.grid(column=0, row=0, columnspan=4, sticky=EW)
 
     configSubTitleUm = ttk.Label(configFrame, text="Realizar a busca em:")
     configSubTitleUm.grid(column=0, row=1)
-    buscarEntry = ttk.Combobox(configFrame, values=geral.sites_list(), textvariable=sitedeBuscaVar)
+    sitesList = geral.sites_list()
+    buscarEntry = ttk.OptionMenu(configFrame, sitedeBuscaVar, geral.sites_list()[0], *sitesList)
     buscarEntry.grid(column=0, row=2)
 
-    bodyFrame = ttk.Frame(mainframe, style='FundoBranco.TFrame')
+    separinhoConfigUm = ttk.Separator(configFrame, orient="vertical")
+    separinhoConfigUm.grid(column=1, row=1, rowspan=2, sticky=NS, padx=10)
+
+    configSubTitleDois = ttk.Label(configFrame, text="Aparência:")
+    configSubTitleDois.grid(column=2, row=1)
+    temasList = ["Tema Claro", "Tema Escuro"]
+    aparenciaScale = ttk.OptionMenu(configFrame, temaVar, temasList[0], *temasList, command=temas)
+    aparenciaScale.grid(column=2, row=2)
+
+    bodyFrame = ttk.Frame(mainframe, style='FundoTelaPrincipal.TFrame')
     bodyFrame.grid(column=0, row=2)
     
-
     # ------------------------------------------------------------------------ FRAMES
 
     # ------------------------------------------------------------------------ LOGO + H1
-    ttk.Label(mainframe, text="Salve salve familia:", font=tittle_Font,
-            padding=(0, 10), anchor='center', foreground=color_white,
-            background=color_blue_label).grid(column=0, row=0, sticky=EW)
+    fonteTitulo = font.Font(name='Maintitle.Font', size=16, weight='bold')
+    ttk.Label(mainframe, text=f"{geral.frases()}:", font=fonteTitulo, padding=(0, 10),
+              style='Titulo.TLabel', anchor=CENTER).grid(column=0, row=0, sticky=EW)
     # ------------------------------------------------------------------------ LOGO + H1
 
     # ------------------------------------------------------------------------ CHOICES

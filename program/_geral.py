@@ -35,26 +35,16 @@ def fechar_navegador(navegador: webdriver.Chrome):
 
 
 def sites_list():
-    """AS53013 - W I X N E T DO BRASIL
-        177.67.X.X/22 53013
-        2804:020:X:X/128 53013"""
 
     sites = ("https://bgpview.io/", "https://bgp.he.net/") # , "https://bgp.tools/", "https://www.peeringdb.com/"
 
     return sites
 
+def frases():
 
+    frases = ["Nããããããoooooo", "Ao vivo", "Ai sofreu", "Meu Deus ein", "Olha o menino como vai"]
 
-def criar_email_provisorio_moakt(nome=f"agente {random.randint(1,99999)}"):
-    navegador_email = abrir_navegador(headless=True)
-    navegador_email.get("https://moakt.com")
-    navegador_email.refresh()
-    navegador_email.find_element(By.NAME, "username").send_keys(str(f"{nome}"))
-    navegador_email.find_element(By.NAME, "setemail").click()
-    email = navegador_email.find_element(By.ID, "email-address").text
-    print(f"E-mail {email} provisório criado.")
-    return email, navegador_email
-
+    return random.choice(frases)
 
 # Decorador de log no terminal e erros
 def log_terminal_automacao(mensagem: str):
@@ -74,14 +64,6 @@ def log_terminal_automacao(mensagem: str):
                     print(f"{mensagem} ... \033[32mConcluído.\033[0m")
                     break
 
-                except StaleElementReferenceException:
-                    if 'PGLS_site.criar_empresa.<locals>._preencher_segunda_pagina_do_cadastro' in funcao.__qualname__: continue
-
-                except ElementClickInterceptedException: # ESSA POCA QUANDO ESTOU REMOVENDO UMA EMPRESA E TENTO MUDAR O USUÁRIO
-                    if 'PGLS_admin._alterar_usuario_CNPJ' in funcao.__qualname__: 
-                        navegador.refresh()
-                        continue
-                    
                 except Exception as e:
                     erros -= 1
                     if erros > 0:
