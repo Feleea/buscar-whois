@@ -44,11 +44,9 @@ def ui_whois():
         ttk.Style().configure('FundoCardTitulo.TLabel', background=corFundoSubTitulo)
         ttk.Style().configure('FundoBranco.TSeparator', background=corFundoPadrao)
 
-        # return dalee
         # ------------------------------------------------------------------------ STYLE LIST
     # ------------------------------------------------------------------------ COLOR LIST
 
-    #dalee = temas("Claro")
     temas("Claro")
     # ------------------------------------------------------------------------ FUNCTIONS LIST
     def buscar():

@@ -42,7 +42,7 @@ def sites_list():
 
 def frases():
 
-    frases = ["Nããããããoooooo", "Ao vivo", "Ai sofreu", "Meu Deus ein", "Olha o menino como vai"]
+    frases = ["Nããããããoooooo", "Ao vivo", "Ai sofreu", "Meu Deus ein", "Olha o menino como vai", "Salve salve familia"]
 
     return random.choice(frases)
 
