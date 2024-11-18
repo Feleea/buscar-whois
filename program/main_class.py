@@ -1,15 +1,19 @@
 from _geral import *
+from bs4 import BeautifulSoup
+import requests
 
 
 
 class whois():
-    def __init__(self, asNumber="") -> None:
+    def __init__(self, asNumber="", requisicao=True) -> None:
         
-        self.navegador = abrir_navegador(is_navegador=True)
         self.asNumber = asNumber
         self.asNumber2 = ""
         self.asName = ""
         self.whois = []
+
+        if requisicao: self.navegador = False
+        else: self.navegador = abrir_navegador()
 
 
     def bgpview(self):
@@ -39,10 +43,28 @@ class whois():
                     self.whois.append(coisa[1].strip())
                     continue
                     
+        def _request_whois():
+            html = requests.get(f"https://bgpview.io/asn/{self.asNumber[2:]}#whois").text
+            soup = BeautifulSoup(html,'html.parser').find_all("pre")
+
+            lista_itens = [item.split(": ") for item in soup[0].get_text().split("\n")] 
+            for coisa in lista_itens:
+                if 'aut-num' in coisa: 
+                    self.asNumber2 = coisa[1].strip()
+                    continue
+                if 'owner' in coisa:
+                    self.asName = coisa[1].strip()
+                    continue
+                if 'inetnum' in coisa:
+                    self.whois.append(coisa[1].strip())
+                    continue
 
         def scrap_bgpview():
-            _acessar_site()
-            _pegar_whois()
+            if navegador:
+                _acessar_site()
+                _pegar_whois()
+
+            else: _request_whois()
             
             return self.asNumber2, self.asName, self.whois
 
@@ -77,10 +99,29 @@ class whois():
                     self.whois.append(coisa[1].strip())
                     continue
 
-        
+        def _request_whois():
+            html = requests.get(f"https://bgp.he.net/{self.asNumber}#_whois").text
+            soup = BeautifulSoup(html,'html.parser').find_all("pre")
+
+            lista_itens = [item.split(": ") for item in soup[0].get_text().split("\n")] 
+            for coisa in lista_itens:
+                if 'aut-num' in coisa: 
+                    self.asNumber2 = coisa[1].strip()
+                    continue
+                if 'owner' in coisa:
+                    self.asName = coisa[1].strip()
+                    continue
+                if 'inetnum' in coisa:
+                    self.whois.append(coisa[1].strip())
+                    continue
+
+
         def scrap_bgp():
-            _acessar_site()
-            _pegar_whois()
+            if navegador:
+                _acessar_site()
+                _pegar_whois()
+
+            else: _request_whois()
 
             return self.asNumber2, self.asName, self.whois
         

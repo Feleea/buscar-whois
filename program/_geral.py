@@ -15,7 +15,7 @@ from datetime import datetime
 
 
 
-def abrir_navegador(is_navegador: bool) -> webdriver.Chrome:
+def abrir_navegador(is_navegador=True) -> webdriver.Chrome:
         
         options = Options()
         options.add_argument('--disable-gpu')

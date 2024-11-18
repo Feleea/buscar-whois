@@ -20,6 +20,7 @@ def ui_whois():
     cardList = []
     sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
     temaVar = StringVar()
+    verNavegador = IntVar(value=0)
     # ------------------------------------------------------------------------ VARIABLES LIST
     # ------------------------------------------------------------------------ COLOR LIST
     def temas(event):
