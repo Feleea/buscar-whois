@@ -18,7 +18,6 @@ def ui_whois():
     asBuscado = StringVar(value="AS53182")
     columContVar = IntVar(value=0)
     rowContVar = IntVar(value=0)
-    cardList = []
     sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
     temaVar = StringVar()
     verNavegador = IntVar(value=0)
@@ -64,9 +63,7 @@ def ui_whois():
 
     def criar_cards():
 
-        asNumberString = asBuscado.get()
-
-        def _criar_cards(asNumber: str, index=0):
+        def _criar_cards(asNumber: str):
 
             program.asNumber = asNumber.strip()
 
@@ -80,7 +77,6 @@ def ui_whois():
             cardBody.grid(column=0, row=1)
             cardBodyContent = Text(cardBody, width=45, height=9)
             cardBodyContent.grid(column=0, row=0)
-            cardList.append(card)
 
             calcularLinhaColuna()
 
@@ -96,10 +92,11 @@ def ui_whois():
 
 
         program = whois.whois(requisicao=verNavegador.get())
+        asNumberString = asBuscado.get()
 
         if "," in asNumberString:
             asNumberList = asNumberString.split(",")
-            for index, asNumber in enumerate(asNumberList): _criar_cards(asNumber, index)
+            for asNumber in asNumberList: _criar_cards(asNumber)
         else:
             _criar_cards(asNumber=asNumberString)
 
@@ -130,8 +127,7 @@ def ui_whois():
         buscarWhois.configure(foreground="black")
 
     def apagarCards():
-            for i in cardList: i.destroy()
-            cardList.clear()
+        for filho in bodyFrame.winfo_children(): filho.destroy()
 
     def criarProgressBar():
         barraProgressoFrame.grid(column=0, row=2)
