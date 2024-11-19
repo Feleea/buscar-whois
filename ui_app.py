@@ -16,7 +16,8 @@ def ui_whois():
     # ------------------------------------------------------------------------ CONFIG UI
     # ------------------------------------------------------------------------ VARIABLES LIST
     asBuscado = StringVar(value="AS53182")
-    columVar = IntVar(value=0)
+    columContVar = IntVar(value=0)
+    rowContVar = IntVar(value=0)
     cardList = []
     sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
     temaVar = StringVar()
@@ -57,6 +58,9 @@ def ui_whois():
         criarProgressBar()
         criar_cards()
         apagarProgressBar()
+        rowContVar.set(0)
+        columContVar.set(0)
+
 
     def criar_cards():
 
@@ -66,16 +70,8 @@ def ui_whois():
 
             program.asNumber = asNumber.strip()
 
-            if len(cardList) // 3 == 1: 
-                columCont = columVar.set(columVar.get()+1)
-                index -= 3
-            if len(cardList) // 3 == 2: 
-                columCont = columVar.set(columVar.get()+2)
-                index -= 3
-            else: columCont = columVar.get()
-
             card = ttk.Frame(bodyFrame, padding="2 2", relief=GROOVE)
-            card.grid(column=columCont, row=index, padx=10, pady=10)
+            card.grid(column=columContVar.get(), row=rowContVar.get(), padx=10, pady=10)
             cardTitle = ttk.Label(
                 card, style='FundoCardTitulo.TLabel',
                 text=f"Busca realizada às {geral.datetime.today().strftime("%H:%M:%S")} - Fonte: {sitedeBuscaVar.get()}", anchor=CENTER)
@@ -85,6 +81,8 @@ def ui_whois():
             cardBodyContent = Text(cardBody, width=45, height=9)
             cardBodyContent.grid(column=0, row=0)
             cardList.append(card)
+
+            calcularLinhaColuna()
 
             if geral.sites_list()[0] in sitedeBuscaVar.get(): info = program.bgpview()
             if geral.sites_list()[1] in sitedeBuscaVar.get(): info = program.bgp()
@@ -107,6 +105,12 @@ def ui_whois():
 
         geral.fechar_navegador(program.navegador)
 
+
+    def calcularLinhaColuna():
+        rowContVar.set(rowContVar.get()+1)
+        if rowContVar.get() == 3 or rowContVar.get() == 6:
+            columContVar.set(columContVar.get()+1)
+            rowContVar.set(0)
 
     def validation():
         tittle_text = "Não foi possível continuar"
