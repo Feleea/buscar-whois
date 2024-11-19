@@ -12,7 +12,7 @@ class whois():
         self.asName = ""
         self.whois = []
 
-        if requisicao: self.navegador = False
+        if requisicao == 0: self.navegador = False
         else: self.navegador = abrir_navegador()
 
 

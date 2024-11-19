@@ -52,8 +52,11 @@ def ui_whois():
     # ------------------------------------------------------------------------ FUNCTIONS LIST
     def buscar():
 
+        apagarCards()
         if validation(): return
+        criarProgressBar()
         criar_cards()
+        apagarProgressBar()
 
     def criar_cards():
 
@@ -94,8 +97,8 @@ def ui_whois():
                 program.whois = []
 
 
-        program = whois.whois()
-        apagarCards()
+        program = whois.whois(requisicao=verNavegador.get())
+
         if "," in asNumberString:
             asNumberList = asNumberString.split(",")
             for index, asNumber in enumerate(asNumberList): _criar_cards(asNumber, index)
@@ -126,7 +129,16 @@ def ui_whois():
             for i in cardList: i.destroy()
             cardList.clear()
 
+    def criarProgressBar():
+        barraProgressoFrame.grid(column=0, row=2)
+        ttk.Label(barraProgressoFrame, text="Buscando informações",
+                  style='FundoCardTitulo.TLabel', anchor="center").grid(column=0, row=0, sticky=EW)
+        pb_hd = ttk.Progressbar(barraProgressoFrame, mode='indeterminate', length=250)
+        pb_hd.grid(column=0, row=1, pady=5)
+        pb_hd.start()
 
+    def apagarProgressBar():
+        barraProgressoFrame.grid_remove()
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
     # ------------------------------------------------------------------------ FRAMES
@@ -143,32 +155,35 @@ def ui_whois():
     buttonbuscarWhois = ttk.Button(
         contornoHeadFrame, text="Buscar", command=lambda: Thread(target=buscar).start())
     buttonbuscarWhois.grid(column=1, row=0, ipady=2)
-    
-    separinhoBusca = ttk.Separator(contornoHeadFrame, orient="vertical")
-    separinhoBusca.grid(column=2, row=0, sticky=NS, padx=10)
+    ttk.Separator(contornoHeadFrame, orient="vertical").grid(column=2, row=0, sticky=NS, padx=10)
 
     configFrame = ttk.Frame(contornoHeadFrame)
     configFrame.grid(column=3, row=0)
     configFrameTitle = ttk.Label(configFrame, text="Configurações", style='FundoCardTitulo.TLabel', anchor=CENTER)
     configFrameTitle.grid(column=0, row=0, columnspan=4, sticky=EW)
 
-    configSubTitleUm = ttk.Label(configFrame, text="Realizar a busca em:")
-    configSubTitleUm.grid(column=0, row=1)
-    sitesList = geral.sites_list()
-    buscarEntry = ttk.OptionMenu(configFrame, sitedeBuscaVar, geral.sites_list()[0], *sitesList)
-    buscarEntry.grid(column=0, row=2)
+    usarNavegador = ttk.Checkbutton(configFrame, text="Visualizar navegador", variable=verNavegador)
+    usarNavegador.grid(column=0, row=1, ipady=5)
+    ttk.Separator(configFrame).grid(column=0, row=2, columnspan=3, sticky=EW)
 
-    separinhoConfigUm = ttk.Separator(configFrame, orient="vertical")
-    separinhoConfigUm.grid(column=1, row=1, rowspan=2, sticky=NS, padx=10)
+    configSubTitleUm = ttk.Label(configFrame, text="Realizar a busca em:")
+    configSubTitleUm.grid(column=0, row=3)
+    sitesList = geral.sites_list()
+    buscarOptions = ttk.OptionMenu(configFrame, sitedeBuscaVar, sitesList[0], *sitesList)
+    buscarOptions.grid(column=1, row=3, ipady=5)
+    ttk.Separator(configFrame).grid(column=0, row=4, columnspan=3, sticky=EW)
 
     configSubTitleDois = ttk.Label(configFrame, text="Aparência:")
-    configSubTitleDois.grid(column=2, row=1)
+    configSubTitleDois.grid(column=0, row=5)
     temasList = ["Tema Claro", "Tema Escuro"]
     aparenciaScale = ttk.OptionMenu(configFrame, temaVar, temasList[0], *temasList, command=temas)
-    aparenciaScale.grid(column=2, row=2)
+    aparenciaScale.grid(column=1, row=5)
+
+    barraProgressoFrame = ttk.Frame(mainframe, padding="10 10 10 10", relief=GROOVE)
+    
 
     bodyFrame = ttk.Frame(mainframe, style='FundoTelaPrincipal.TFrame')
-    bodyFrame.grid(column=0, row=2)
+    bodyFrame.grid(column=0, row=4)
     
     # ------------------------------------------------------------------------ FRAMES
 
