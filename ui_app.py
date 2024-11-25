@@ -21,6 +21,7 @@ def ui_whois():
     sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
     temaVar = StringVar()
     verNavegador = IntVar(value=0)
+    trocarTitleVar = StringVar(value=f"{geral.frases()}")
     # ------------------------------------------------------------------------ VARIABLES LIST
     # ------------------------------------------------------------------------ COLOR LIST
     def temas(event):
@@ -59,6 +60,7 @@ def ui_whois():
         apagarProgressBar()
         rowContVar.set(0)
         columContVar.set(0)
+        atualizarJanela()
 
 
     def criar_cards():
@@ -139,6 +141,10 @@ def ui_whois():
 
     def apagarProgressBar():
         barraProgressoFrame.grid_remove()
+
+    def atualizarJanela():
+        trocarTitleVar.set(f"trocou")
+        janela.update()
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
     # ------------------------------------------------------------------------ FRAMES
@@ -189,7 +195,7 @@ def ui_whois():
 
     # ------------------------------------------------------------------------ LOGO + H1
     fonteTitulo = font.Font(name='Maintitle.Font', size=16, weight='bold')
-    ttk.Label(mainframe, text=f"{geral.frases()}:", font=fonteTitulo, padding=(0, 10),
+    ttk.Label(mainframe, text=trocarTitleVar.get(), font=fonteTitulo, padding=(0, 10),
               style='Titulo.TLabel', anchor=CENTER).grid(column=0, row=0, sticky=EW)
     # ------------------------------------------------------------------------ LOGO + H1
 
