@@ -7,6 +7,9 @@ from threading import Thread
 
 
 def ui_whois():
+    navegadorOn = None
+    cardsContentList = []
+
     # ------------------------------------------------------------------------ CONFIG UI
     janela = Tk()
     janela.title("Buscar Whois")
@@ -20,7 +23,8 @@ def ui_whois():
     rowContVar = IntVar(value=0)
     sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
     temaVar = StringVar()
-    verNavegador = IntVar(value=0)
+    verWhatsApp = IntVar(value=0)
+    contatoWhatsAppVar = StringVar(value="Nome do contato")
     # ------------------------------------------------------------------------ VARIABLES LIST
     # ------------------------------------------------------------------------ COLOR LIST
     def temas(event):
@@ -46,14 +50,13 @@ def ui_whois():
         ttk.Style().configure('FundoBranco.TSeparator', background=corFundoPadrao)
 
         # ------------------------------------------------------------------------ STYLE LIST
-    # ------------------------------------------------------------------------ COLOR LIST
-
     temas("Claro")
+    # ------------------------------------------------------------------------ COLOR LIST
     # ------------------------------------------------------------------------ FUNCTIONS LIST
     def buscar():
 
-        '''apagarCards()
         if validation(): return
+        '''apagarCards()
         criarProgressBar()
         criar_cards()
         apagarProgressBar()
@@ -87,12 +90,13 @@ def ui_whois():
             cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
             for i in info[2]:
                 cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
+                cardsContentList.append(cardBodyContent)
                 program.asNumber2 = ""
                 program.asName = ""
                 program.whois = []
 
 
-        program = whois.whois(requisicao=verNavegador.get())
+        program = whois.whois()
         asNumberString = asBuscado.get()
 
         if "," in asNumberString:
@@ -100,8 +104,6 @@ def ui_whois():
             for asNumber in asNumberList: _criar_cards(asNumber)
         else:
             _criar_cards(asNumber=asNumberString)
-
-        geral.fechar_navegador(program.navegador)
 
 
     def calcularLinhaColuna():
@@ -121,11 +123,20 @@ def ui_whois():
             messagebox.showinfo(message='Realize a busca do troço com o "AS" na frente', title=tittle_text)
             return True
         
+        if "disabled" not in contatoZap.state() and contatoWhatsAppVar.get() == "":
+            messagebox.showinfo(message='Coloque um nome de contato valido', title=tittle_text)
+            return True
+        
         return False
     
     def limpar_entry_email(event):
         buscarWhois.delete(0, END)
         buscarWhois.configure(foreground="black")
+
+    def limpar_entry_contato(event):
+        if "disabled" in contatoZap.state(): return
+        contatoZap.delete(0, END)
+        contatoZap.configure(foreground="black")
 
     def apagarCards():
         for filho in bodyFrame.winfo_children(): filho.destroy()
@@ -144,6 +155,29 @@ def ui_whois():
     def atualizarTitleFrame():
         labelTitle.config(text=geral.frases())
         
+    def navi():
+        if verWhatsApp.get() == 0: 
+            contatoZap.configure(state=DISABLED)
+            return
+        try:
+            navegadorOn.title
+            return
+        except:
+            contatoZap.configure(state=NORMAL)
+            navegadorOn = geral.abrir_navegador()
+            navegadorOn.get("https://web.whatsapp.com/")
+            try:
+                geral.WebDriverWait(navegadorOn, 60).until(
+                    geral.EC.invisibility_of_element_located((geral.By.ID, "link-device-phone-number-code-screen-instructions")))
+            except: navegadorOn.close()
+            navegadorOn.minimize_window()
+        
+    def enviarWhois(navegadorOn: geral.webdriver.Chrome):
+        navegadorOn.find_element(geral.By.CLASS_NAME, "x1n2onr6.xh8yej3.lexical-rich-text-input").send_keys(contatoWhatsAppVar.get())
+        navegadorOn.find_element(geral.By.XPATH, '//*[@id="pane-side"]/div[1]/div/div/div[2]/div/div/div/div[2]').click()
+        for i in cardsContentList:
+            navegadorOn.find_elements(geral.By.CLASS_NAME, "x1n2onr6.xh8yej3.lexical-rich-text-input")[1].send_keys(i)
+
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
     # ------------------------------------------------------------------------ FRAMES
@@ -167,9 +201,12 @@ def ui_whois():
     configFrameTitle = ttk.Label(configFrame, text="Configurações", style='FundoCardTitulo.TLabel', anchor=CENTER)
     configFrameTitle.grid(column=0, row=0, columnspan=4, sticky=EW)
 
-    usarNavegador = ttk.Checkbutton(configFrame, text="Visualizar navegador", variable=verNavegador)
-    usarNavegador.grid(column=0, row=1, ipady=5)
+    usarWhatsApp = ttk.Checkbutton(configFrame, text="Utilizar WhatsApp", variable=verWhatsApp, command=navi)
+    usarWhatsApp.grid(column=0, row=1, ipady=5)
     ttk.Separator(configFrame).grid(column=0, row=2, columnspan=3, sticky=EW)
+    contatoZap = ttk.Entry(configFrame, textvariable=contatoWhatsAppVar, foreground="gray")
+    contatoZap.grid(column=1, row=1)
+    contatoZap.configure(state=DISABLED)
 
     configSubTitleUm = ttk.Label(configFrame, text="Realizar a busca em:")
     configSubTitleUm.grid(column=0, row=3)
@@ -211,7 +248,8 @@ def ui_whois():
     # ------------------------------------------------------------------------ FOOT
 
     # ------------------------------------------------------------------------ EVENTS
-    buscarWhois.bind('<Button-1>', limpar_entry_email) # Limpar Entry de usuário e senha
+    buscarWhois.bind('<Button-1>', limpar_entry_email)
+    contatoZap.bind('<Button-1>', limpar_entry_contato) 
     # ------------------------------------------------------------------------ EVENTS
 
     # ------------------------------------------------------------------------ RUN WINDOWS
