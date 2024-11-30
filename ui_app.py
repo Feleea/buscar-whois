@@ -52,13 +52,13 @@ def ui_whois():
     # ------------------------------------------------------------------------ FUNCTIONS LIST
     def buscar():
 
-        '''apagarCards()
+        apagarCards()
         if validation(): return
         criarProgressBar()
         criar_cards()
         apagarProgressBar()
         rowContVar.set(0)
-        columContVar.set(0)'''
+        columContVar.set(0)
         atualizarTitleFrame()
 
 
