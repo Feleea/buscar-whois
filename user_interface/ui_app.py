@@ -1,8 +1,8 @@
 import context
 from tkinter import *
 from tkinter import ttk, font, messagebox
-import program._geral as geral
-import program.main_class as whois
+from models import geral
+import controller.main_class as whois
 from threading import Thread
 
 

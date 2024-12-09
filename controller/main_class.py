@@ -1,4 +1,4 @@
-from _geral import *
+from models.geral import *
 from bs4 import BeautifulSoup
 import requests
 
