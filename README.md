@@ -9,7 +9,8 @@
     * Ex.: AS123,AS124,AS125, AS126, AS127
  * Também é possível consultar em sites diferentes ao selecionar nas configurações
 
- 
+ ![2024-12-08-21-44-20](https://github.com/user-attachments/assets/6a03ae4e-1a77-45ad-bb8d-0130712db4bd)
+
 
 # Como instalar:
 
