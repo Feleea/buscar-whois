@@ -118,7 +118,7 @@ def ui_whois():
             return True
         
         if "AS" not in asBuscado.get():
-            messagebox.showinfo(message='Realize a busca do troço com o "AS" na frente', title=tittle_text)
+            messagebox.showinfo(message='Realize a busca do ASN com o "AS" na frente\nEx.: AS12344', title=tittle_text)
             return True
         
         return False
