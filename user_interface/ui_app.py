@@ -15,7 +15,7 @@ def ui_whois():
     janela.resizable(width=False, height=False)
     # ------------------------------------------------------------------------ CONFIG UI
     # ------------------------------------------------------------------------ VARIABLES LIST
-    asBuscado = StringVar(value="AS53182")
+    asBuscado = StringVar(value="AS53182, AS53183, AS53184, AS53185, AS53186, AS53187, AS53188")
     columContVar = IntVar(value=0)
     rowContVar = IntVar(value=0)
     sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
@@ -78,6 +78,9 @@ def ui_whois():
             cardBody.grid(column=0, row=1)
             cardBodyContent = Text(cardBody, width=45, height=9)
             cardBodyContent.grid(column=0, row=0)
+            cardBodyScroll = ttk.Scrollbar(cardBody, orient=VERTICAL, command=cardBodyContent.yview)
+            cardBodyScroll.grid(column=1, row=0, sticky=NS)
+            cardBodyContent.configure(yscrollcommand=cardBodyScroll.set)
 
             calcularLinhaColuna()
 
