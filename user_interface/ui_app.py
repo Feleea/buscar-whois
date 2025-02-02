@@ -4,12 +4,14 @@ from tkinter import ttk, font, messagebox
 from models import geral
 import controller.main_class as whois
 from threading import Thread
+import os
 
 
 def ui_whois():
     # ------------------------------------------------------------------------ CONFIG UI
     janela = Tk()
 
+    # Configuração do canvas e do scroll
     yrolador = ttk.Scrollbar(janela, orient=VERTICAL)
     testedorolador = Canvas(janela, scrollregion=(0, 0, 0, 0), yscrollcommand=yrolador.set)
     yrolador['command'] = testedorolador.yview
@@ -25,7 +27,7 @@ def ui_whois():
     #janela.geometry("866x500")  # Largura x Altura
     #janela.maxsize(1370, 500)
     janela.iconphoto(False, PhotoImage(file=geral.procurar_arquivos("dance.gif")))
-    #janela.resizable(width=False, height=False)
+    janela.resizable(width=False, height=False)
     # ------------------------------------------------------------------------ CONFIG UI
     # ------------------------------------------------------------------------ VARIABLES LIST
     asBuscado = StringVar(value="AS53182, AS53183, AS53184, AS53185, AS53186, AS53187, AS53188")
@@ -34,6 +36,8 @@ def ui_whois():
     sitedeBuscaVar = StringVar(value=f"{geral.sites_list()[0]}")
     temaVar = StringVar()
     verNavegador = IntVar(value=0)
+    exportarResultado = BooleanVar(value=True)
+    resultadoDaBusca = []
     # ------------------------------------------------------------------------ VARIABLES LIST
     # ------------------------------------------------------------------------ COLOR LIST
     def temas(event):
@@ -73,6 +77,7 @@ def ui_whois():
         rowContVar.set(0)
         columContVar.set(0)
         atualizarTitleFrame()
+        if exportarResultado: gerarNotepad()
 
 
     def criar_cards():
@@ -99,6 +104,7 @@ def ui_whois():
             if geral.sites_list()[0] in sitedeBuscaVar.get(): info = program.bgpview()
             if geral.sites_list()[1] in sitedeBuscaVar.get(): info = program.bgp()
 
+            resultadoDaBusca.append(info)
             cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
             for i in info[2]:
                 cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
@@ -129,7 +135,7 @@ def ui_whois():
             
         if len(bodyFrame.winfo_children()) >= 2 and len(bodyFrame.winfo_children()) % 2 == 0:    
             rowContVar.set(rowContVar.get()+1)
-            janela.geometry("865x500")
+            janela.geometry("864x500")
 
 
     def validation():
@@ -169,6 +175,17 @@ def ui_whois():
     def atualizarTitleFrame():
         labelTitle.config(text=geral.frases())
         
+    def gerarNotepad():
+        if os.path.exists("notepad.txt"): os.remove("notepad.txt")
+        with open("notepad.txt", "w") as notepad:
+            for itemColetado in resultadoDaBusca:
+                notepad.write(itemColetado[0] + " - " + itemColetado[1] + "\n")
+                for i in itemColetado[2]:
+                    notepad.write(i + f" {itemColetado[0][2:]}\n")
+                notepad.write("\n")
+        os.system(f'notepad.exe notepad.txt')
+
+    
     # ------------------------------------------------------------------------ FUNCTIONS LIST
 
     # ------------------------------------------------------------------------ FRAMES
@@ -194,9 +211,12 @@ def ui_whois():
     configFrameTitle = ttk.Label(configFrame, text="Configurações", style='FundoCardTitulo.TLabel', anchor=CENTER)
     configFrameTitle.grid(column=0, row=0, columnspan=4, sticky=EW)
 
-    usarNavegador = ttk.Checkbutton(configFrame, text="Visualizar navegador", variable=verNavegador)
+    usarNavegador = ttk.Checkbutton(configFrame, text="Visualizar Navegador", variable=verNavegador)
     usarNavegador.grid(column=0, row=1, ipady=5)
     ttk.Separator(configFrame).grid(column=0, row=2, columnspan=3, sticky=EW)
+
+    abrirNotePad = ttk.Checkbutton(configFrame, text="Exportar Busca", variable=exportarResultado)
+    abrirNotePad.grid(column=1, row=1)
 
     configSubTitleUm = ttk.Label(configFrame, text="Realizar a busca em:")
     configSubTitleUm.grid(column=0, row=3)
