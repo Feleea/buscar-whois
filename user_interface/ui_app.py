@@ -82,7 +82,6 @@ def ui_whois():
             cardBodyScroll.grid(column=1, row=0, sticky=NS)
             cardBodyContent.configure(yscrollcommand=cardBodyScroll.set)
 
-            calcularLinhaColuna()
 
             if geral.sites_list()[0] in sitedeBuscaVar.get(): info = program.bgpview()
             if geral.sites_list()[1] in sitedeBuscaVar.get(): info = program.bgp()
@@ -94,6 +93,7 @@ def ui_whois():
                 program.asName = ""
                 program.whois = []
 
+            calcularLinhaColuna()
 
         program = whois.whois(requisicao=verNavegador.get())
         asNumberString = asBuscado.get()
@@ -108,10 +108,17 @@ def ui_whois():
 
 
     def calcularLinhaColuna():
-        rowContVar.set(rowContVar.get()+1)
-        if rowContVar.get() == 3 or rowContVar.get() == 6:
-            columContVar.set(columContVar.get()+1)
-            rowContVar.set(0)
+
+        print(len(bodyFrame.winfo_children()))
+        print(columContVar.get())
+        if len(bodyFrame.winfo_children()) % 2 == 0:
+            columContVar.set(0)
+        else: 
+            columContVar.set(1)
+            
+        if len(bodyFrame.winfo_children()) >= 2 and len(bodyFrame.winfo_children()) % 2 == 0:    
+            rowContVar.set(rowContVar.get()+1)
+            
 
     def validation():
         tittle_text = "Não foi possível continuar"
@@ -152,6 +159,8 @@ def ui_whois():
     # ------------------------------------------------------------------------ FRAMES
     mainframe = ttk.Frame(janela, padding="5 5", style='FundoTelaPrincipal.TFrame')
     mainframe.grid(column=0, row=0)
+    mainframe.grid_columnconfigure(0, weight=1)
+    mainframe.grid_rowconfigure(0, weight=1)
 
     headFrame = ttk.Frame(mainframe, padding="0 5 0 0", style='FundoTelaPrincipal.TFrame') # Esquerda, cima, direita, baixo
     headFrame.grid(column=0, row=1, pady=5)
@@ -192,6 +201,12 @@ def ui_whois():
 
     bodyFrame = ttk.Frame(mainframe, style='FundoTelaPrincipal.TFrame')
     bodyFrame.grid(column=0, row=4)
+    bodyFrame.grid_rowconfigure(0, weight=1)
+    bodyFrame.grid_columnconfigure(0, weight=1)
+
+    yrolador = ttk.Scrollbar(bodyFrame, orient=VERTICAL)#, command=bodyFrame.yview
+    yrolador.grid(column=2, row=0, sticky=NS)
+    #bodyFrame.configure(yscrollcommand=yrolador.set)
     
     # ------------------------------------------------------------------------ FRAMES
 
