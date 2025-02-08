@@ -85,34 +85,36 @@ def ui_whois():
         def _criar_cards(asNumber: str):
 
             program.asNumber = asNumber.strip()
-
-            card = ttk.Frame(bodyFrame, padding="2 2", relief=GROOVE)
-            card.grid(column=columContVar.get(), row=rowContVar.get(), padx=10, pady=10)
-            cardTitle = ttk.Label(
-                card, style='FundoCardTitulo.TLabel',
-                text=f"Busca realizada às {geral.datetime.today().strftime("%H:%M:%S")} - Fonte: {sitedeBuscaVar.get()}", anchor=CENTER)
-            cardTitle.grid(column=0, row=0, sticky=NSEW)
-            cardBody = ttk.Frame(card, padding="5 0 5 5")
-            cardBody.grid(column=0, row=1)
-            cardBodyContent = Text(cardBody, width=45, height=9)
-            cardBodyContent.grid(column=0, row=0)
-            cardBodyScroll = ttk.Scrollbar(cardBody, orient=VERTICAL, command=cardBodyContent.yview)
-            cardBodyScroll.grid(column=1, row=0, sticky=NS)
-            cardBodyContent.configure(yscrollcommand=cardBodyScroll.set)
-            testedorolador.configure(scrollregion=(0, 0, janela.winfo_height(), janela.winfo_width()))
-
             if geral.sites_list()[0] in sitedeBuscaVar.get(): info = program.bgpview()
             if geral.sites_list()[1] in sitedeBuscaVar.get(): info = program.bgp()
 
             resultadoDaBusca.append(info)
-            cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
-            for i in info[2]:
-                cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
-                program.asNumber2 = ""
-                program.asName = ""
-                program.whois = []
 
-            calcularLinhaColuna()
+            if not exportarResultado.get():
+                card = ttk.Frame(bodyFrame, padding="2 2", relief=GROOVE)
+                card.grid(column=columContVar.get(), row=rowContVar.get(), padx=10, pady=10)
+                cardTitle = ttk.Label(
+                    card, style='FundoCardTitulo.TLabel',
+                    text=f"Busca realizada às {geral.datetime.today().strftime("%H:%M:%S")} - Fonte: {sitedeBuscaVar.get()}", anchor=CENTER)
+                cardTitle.grid(column=0, row=0, sticky=NSEW)
+                cardBody = ttk.Frame(card, padding="5 0 5 5")
+                cardBody.grid(column=0, row=1)
+                cardBodyContent = Text(cardBody, width=45, height=9)
+                cardBodyContent.grid(column=0, row=0)
+                cardBodyScroll = ttk.Scrollbar(cardBody, orient=VERTICAL, command=cardBodyContent.yview)
+                cardBodyScroll.grid(column=1, row=0, sticky=NS)
+                cardBodyContent.configure(yscrollcommand=cardBodyScroll.set)
+                testedorolador.configure(scrollregion=(0, 0, janela.winfo_height(), janela.winfo_width()))
+
+
+                cardBodyContent.insert(END, info[0] + " - " + info[1] + "\n")
+                for i in info[2]:
+                    cardBodyContent.insert(END, i + f" {info[0][2:]}\n")
+                    program.asNumber2 = ""
+                    program.asName = ""
+                    program.whois = []
+
+                calcularLinhaColuna()
 
         program = whois.whois(requisicao=verNavegador.get())
         asNumberString = asBuscado.get()
@@ -166,7 +168,7 @@ def ui_whois():
         pb_hd = ttk.Progressbar(barraProgressoFrame, mode='indeterminate', length=250)
         pb_hd.grid(column=0, row=1, pady=5)
         pb_hd.start()
-        if len(bodyFrame.winfo_children()) == 0:
+        if len(bodyFrame.winfo_children()) == 0 and not exportarResultado.get():
             janela.geometry("550x500")
         
     def apagarProgressBar():
@@ -176,8 +178,8 @@ def ui_whois():
         labelTitle.config(text=geral.frases())
         
     def gerarNotepad():
-        if os.path.exists("notepad.txt"): os.remove("notepad.txt")
-        with open("notepad.txt", "w") as notepad:
+
+        with open(f"Busca {geral.datetime.today().hour}_{geral.datetime.today().minute}.txt", "w") as notepad:
             for itemColetado in resultadoDaBusca:
                 notepad.write(itemColetado[0] + " - " + itemColetado[1] + "\n")
                 for i in itemColetado[2]:
