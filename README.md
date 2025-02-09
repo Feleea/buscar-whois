@@ -27,3 +27,7 @@
  ```bash
  pip install -r requirements.txt
  ```
+
+ # Executar:
+
+  ### Para executar é só rodar o arquivo ui_app.py
